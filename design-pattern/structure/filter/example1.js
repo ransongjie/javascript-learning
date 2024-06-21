@@ -46,7 +46,7 @@ class IsFemale extends Criteria {//是否女性
     filter(customers) {
         let females = []
         for (let i = 0; i < customers.length; i++) {
-            if (customers[i].isFemale) {
+            if (customers[i].isFemale()) {
                 females.push(customers[i])
             }
         }
@@ -97,7 +97,9 @@ class Or extends Criteria {
             customers3.push(c)
         }
         for (const c of customers2) {
-            customers3.push(c)
+            if (customers3.indexOf(c) === -1) {
+                customers3.push(c)
+            }
         }
         return customers3
     }
@@ -109,14 +111,23 @@ let c3 = new Customer("xcrj3", true, false)
 let c4 = new Customer("xcrj4", true, true)
 let c5 = new Customer("xcrj5", false, true)
 let c6 = new Customer("xcrj6", true, false)
-let customers = [c1, c2, c3, c4, c5, c6]
+let c7 = new Customer("xcrj7", false, false)
+let customers = [c1, c2, c3, c4, c5, c6, c7]
 
 let single = new IsSingle()
 let male = new IsMale()
 let female = new IsFemale()
 
+console.log("Single")
 console.log(single.filter(customers))
+
+console.log("Male")
 console.log(male.filter(customers))
 
+console.log("Male and Single")
 let and = new And(male, single)
 console.log(and.filter(customers))
+
+console.log("Female or Single")
+let or = new Or(female, single)
+console.log(or.filter(customers))
